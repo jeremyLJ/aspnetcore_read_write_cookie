@@ -30,6 +30,12 @@ public class UpsertCookieMiddleware
             return Task.CompletedTask;
         }
 
+        var setCookieHeaders = context.Response.GetTypedHeaders().SetCookie;
+        var targetCookie = setCookieHeaders.FirstOrDefault(c => c.Name == "cookie11");
+        if(targetCookie != null)
+        {
+            context.Response.Cookies.Delete(targetCookie.Name.Value);
+        }
         var cookieKvMap = QueryHelpers.ParseQuery(cookieFromRequest);
         
         cookieKvMap["newKey"] = "newVal" + DateTime.Now.Millisecond;
